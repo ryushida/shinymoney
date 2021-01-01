@@ -145,7 +145,7 @@ function(input, output, session) {
   })
 
   output$expense_count <- renderPlot({
-    plot(expense_counts()$date, expense_counts()$count)
+    plot(expense_counts()$date, expense_counts()$count, ylim = c(0,max(expense_counts()$count)))
   })
 
 
