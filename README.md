@@ -1,4 +1,16 @@
 
+R Shiny Application for managing and visualizing expenses/spending.
+
+# Features
+
+- Enter expenses
+
+- Visualize Spending by Date
+
+- Visualize Spending by Category
+
+- Manage categories, accounts, and account types
+
 
 # Usage
 
@@ -26,3 +38,5 @@ default:
   database_user: 'postgresuser'
   database_password: 'password'
 ```
+
+4. Start Application
