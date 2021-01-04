@@ -128,7 +128,8 @@ function(input, output, session) {
   })
 
   output$expense_amount <- renderPlot({
-    plot(expense_amounts()$date, expense_amounts()$sum)
+    plot(expense_amounts()$date, expense_amounts()$sum,
+         xlab = "Date", ylab = "Amount")
   })
 
 
@@ -141,7 +142,9 @@ function(input, output, session) {
   })
 
   output$expense_count <- renderPlot({
-    plot(expense_counts()$date, expense_counts()$count, ylim = c(0,max(expense_counts()$count)))
+    plot(expense_counts()$date, expense_counts()$count,
+         ylim = c(0,max(expense_counts()$count)),
+         xlab = "Date", ylab = "Count")
   })
 
 
@@ -157,6 +160,8 @@ function(input, output, session) {
   })
 
   output$expense_by_category <- renderPlot({
-    barplot(expense_by_categories()$sum, names.arg = expense_by_categories()$category_name)
+    barplot(expense_by_categories()$sum,
+            names.arg = expense_by_categories()$category_name,
+            xlab = "Category", ylab = "Amount")
   })
 }
