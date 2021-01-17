@@ -1,5 +1,4 @@
 library(DBI)
-library(ggplot2)
 
 source("functions.R", local = TRUE)
 
@@ -126,7 +125,7 @@ function(input, output, session) {
             		DATE_PART(\'week\', "date") AS week_number,
             		to_char("date", \'W\') as week_of_month,
                 EXTRACT(dow FROM "date") AS day_of_week,
-                SUM(amount)
+                SUM(amount) as metric
                 FROM expense
                 GROUP BY "date"'
 
@@ -144,17 +143,27 @@ function(input, output, session) {
   })
 
 
-  q_expense_counts <- 'SELECT "date", COUNT(*)
-                       FROM expense
-                       GROUP BY "date"'
+  q_expense_counts <- 'SELECT "date",
+                    		DATE_PART(\'year\', "date") AS year,
+                        DATE_PART(\'month\', "date") AS month,
+                        DATE_PART(\'week\', "date") AS week_number,
+                        to_char("date", \'W\') as week_of_month,
+                        EXTRACT(dow FROM "date") AS day_of_week,
+                    		COUNT(*) as metric
+                        FROM expense
+                        GROUP BY "date"'
 
   expense_counts <- reactive({
     dbFetch(dbSendQuery(con, q_expense_counts))
   })
+  
+  output$expense_count_heatmap <- renderPlot({
+    create_heatmap(expense_counts())
+  })
 
   output$expense_count <- renderPlot({
-    plot(expense_counts()$date, expense_counts()$count,
-         ylim = c(0,max(expense_counts()$count)),
+    plot(expense_counts()$date, expense_counts()$metric,
+         ylim = c(0,max(expense_counts()$metric)),
          xlab = "Date", ylab = "Count")
   })
 

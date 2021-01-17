@@ -8,7 +8,7 @@ get_id <- function(con, query, value, colname) {
 
 
 create_heatmap <- function(df) {
-  ggplot(add_day_text(df), aes(week_of_month, day_of_week_text, fill = sum)) +
+  ggplot(add_day_text(df), aes(week_of_month, day_of_week_text, fill = metric)) +
     geom_tile() +
     facet_grid(df$year~df$month) +
     scale_fill_gradient(low = "#99FF99", high = "#006600") +

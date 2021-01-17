@@ -25,7 +25,8 @@ fluidPage(navbarPage(
       ),
       tabPanel(
         "Expense Counts by Date",
-        plotOutput("expense_count", click = "plot_click")
+        plotOutput("expense_count", click = "plot_click"),
+        plotOutput("expense_count_heatmap", click = "plot_click")
       ),
       tabPanel(
         "Expense by Category",
