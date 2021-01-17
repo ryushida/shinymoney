@@ -119,7 +119,13 @@ function(input, output, session) {
   #
   # Plots
   #
-  q_expense <- 'SELECT "date", SUM(amount)
+  q_expense <- 'SELECT "date",
+            		DATE_PART(\'year\', "date") AS year,
+                DATE_PART(\'month\', "date") AS month,
+            		DATE_PART(\'week\', "date") AS week_number,
+            		to_char("date", \'W\') as week_of_month,
+                EXTRACT(dow FROM "date") AS day_of_week,
+                SUM(amount)
                 FROM expense
                 GROUP BY "date"'
 
@@ -127,6 +133,13 @@ function(input, output, session) {
     dbFetch(dbSendQuery(con, q_expense))
   })
 
+  output$expense_amount_heatmap <- renderPlot({
+    ggplot(expense_amounts(), aes(week_of_month, day_of_week, fill = sum)) +
+      geom_tile() +
+      facet_grid(expense_amounts()$year~expense_amounts()$month) +
+      scale_fill_gradient(low = "#99FF99", high = "#006600")
+  })
+  
   output$expense_amount <- renderPlot({
     plot(expense_amounts()$date, expense_amounts()$sum,
          xlab = "Date", ylab = "Amount")

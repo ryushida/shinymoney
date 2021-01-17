@@ -20,7 +20,8 @@ fluidPage(navbarPage(
       ),
       tabPanel(
         "Total Expenses by Date",
-        plotOutput("expense_amount", click = "plot_click")
+        plotOutput("expense_amount", click = "plot_click"),
+        plotOutput("expense_amount_heatmap", click = "plot_click")
       ),
       tabPanel(
         "Expense Counts by Date",
