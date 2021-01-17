@@ -1,4 +1,5 @@
 library(DBI)
+library(ggplot2)
 
 source("functions.R", local = TRUE)
 
