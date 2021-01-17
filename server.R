@@ -135,7 +135,7 @@ function(input, output, session) {
   })
 
   output$expense_amount_heatmap <- renderPlot({
-    ggplot(expense_amounts(), aes(week_of_month, day_of_week, fill = sum)) +
+    ggplot(expense_amounts(), aes(week_of_month, -day_of_week, fill = sum)) +
       geom_tile() +
       facet_grid(expense_amounts()$year~expense_amounts()$month) +
       scale_fill_gradient(low = "#99FF99", high = "#006600")
