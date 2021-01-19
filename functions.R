@@ -6,6 +6,10 @@ get_id <- function(con, query, value, colname) {
   id <- dbFetch(id)[[colname]]
 }
 
+account_exists <- function(con, query, id) {
+  count <- dbFetch(dbSendQuery(con, query, id))
+  exists <- ifelse(count > 0, TRUE, FALSE)
+}
 
 create_heatmap <- function(df) {
   ggplot(add_day_text(df), aes(week_of_month, day_of_week_text, fill = metric)) +

@@ -25,3 +25,8 @@ CREATE TABLE IF NOT EXISTS expense (
 	category_id integer REFERENCES expense_category (category_id),
 	note varchar(140)
 );
+
+CREATE TABLE IF NOT EXISTS account_value (
+  account_id integer REFERENCES account(account_id) UNIQUE,
+  account_value integer
+);
