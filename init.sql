@@ -28,5 +28,5 @@ CREATE TABLE IF NOT EXISTS expense (
 
 CREATE TABLE IF NOT EXISTS account_value (
   account_id integer REFERENCES account(account_id) UNIQUE,
-  account_value integer
+  account_value numeric
 );
