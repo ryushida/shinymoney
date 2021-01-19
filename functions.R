@@ -15,7 +15,7 @@ create_stacked_bar <- function(df) {
   df <- df %>% mutate(Values = "")
   ggplot(df, aes(Values, account_value/sum(account_value), fill = account_name)) +
     geom_col() +
-    geom_text(aes(label = paste0(account_value/sum(account_value)*100, "%")),
+    geom_text(aes(label = paste0(format(round(account_value/sum(account_value)*100, 2), nsmall = 2), "%")),
               position = position_stack(vjust = 0.5)) +
     coord_flip() +
     labs(y = "Proportions")
