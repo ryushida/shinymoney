@@ -206,4 +206,17 @@ function(input, output, session) {
             names.arg = expense_by_categories()$category_name,
             xlab = "Category", ylab = "Amount")
   })
+  
+  q_account_values <- "SELECT account.account_name, account_value.account_value
+                        FROM account_value
+                        LEFT JOIN account
+                        ON account_value.account_id = account.account_id"
+  
+  account_values <- reactive({
+    dbFetch(dbSendQuery(con, q_account_values))
+  })
+  
+  output$account_values_graph <- renderPlot({
+    create_stacked_bar(account_values())
+  })
 }

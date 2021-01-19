@@ -34,6 +34,7 @@ fluidPage(navbarPage(
       )
     ))
   ),
+  
   tabPanel(
     "Net Worth",
     # Menu to update the current value of each Account
@@ -43,8 +44,15 @@ fluidPage(navbarPage(
       actionButton("set_account_value", "Update Account Value"),
     ),
     
+    mainPanel(tabsetPanel(
+      tabPanel(
+        "Account Values",
+        plotOutput("account_values_graph", click = "plot_click")
+      )
+    ))
     
   ),
+  
   tabPanel(
     "Config",
 
