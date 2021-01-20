@@ -19,7 +19,9 @@ function(input, output, session) {
   # Tables
   #
   q_account_type_table <- "SELECT account_type FROM account_type"
-  output$account_type_table <- DT::renderDataTable(dbFetch(dbSendQuery(con, q_account_type_table)))
+  output$account_type_table <- DT::renderDataTable(
+    dbFetch(dbSendQuery(con, q_account_type_table))
+  )
 
   q_account_table <- "SELECT account.account_name, account_type.account_type
                       FROM account
@@ -34,7 +36,9 @@ function(input, output, session) {
   output$expense_category_table <-
     DT::renderDataTable(dbFetch(dbSendQuery(con, q_expense_category_table)))
 
-  q_expense_table <- "SELECT expense.expense_id, expense.date, account.account_name, expense.amount, expense_category.category_name, expense.note
+  q_expense_table <- "SELECT expense.expense_id, expense.date,
+                             account.account_name, expense.amount,
+                             expense_category.category_name, expense.note
                       FROM expense
                       JOIN expense_category
                       ON expense.category_id = expense_category.category_id
@@ -73,15 +77,19 @@ function(input, output, session) {
   # Add
   #
   observeEvent(input$add_account_type, {
-    q_insert_account_type <- "INSERT INTO account_type (account_type_id, account_type) VALUES (DEFAULT, $1)"
+    q_insert_account_type <- "INSERT INTO account_type (account_type_id, account_type)
+                              VALUES (DEFAULT, $1)"
     dbSendQuery(con, q_insert_account_type, c(input$account_type_name))
   })
   observeEvent(input$add_account, {
     # Return account_type_id of existing account type
-    q_account_type <- "SELECT account_type_id FROM account_type WHERE account_type = $1"
+    q_account_type <- "SELECT account_type_id
+                       FROM account_type
+                       WHERE account_type = $1"
     account_type_id <- get_id(con, q_account_type, input$account_type, "account_type_id")
 
-    q_account <- "INSERT INTO Account (account_id, account_name, account_type_id) VALUES(DEFAULT, $1, $2)"
+    q_account <- "INSERT INTO Account (account_id, account_name, account_type_id)
+                  VALUES(DEFAULT, $1, $2)"
     dbSendQuery(
       con, q_account,
       c(input$account_name, as.double(account_type_id))
@@ -99,7 +107,8 @@ function(input, output, session) {
                       WHERE category_name = $1"
     category_id <- get_id(con, q_category_id, input$expense_category, "category_id")
 
-    q_expense <- "INSERT INTO expense (expense_id, date, account_id, amount, category_id, note) VALUES (DEFAULT, $1, $2, $3, $4, $5)"
+    q_expense <- "INSERT INTO expense (expense_id, date, account_id, amount, category_id, note)
+                  VALUES (DEFAULT, $1, $2, $3, $4, $5)"
     dbSendQuery(
       con,
       q_expense,
@@ -114,24 +123,31 @@ function(input, output, session) {
   })
 
   observeEvent(input$add_category, {
-    q_category <- "INSERT INTO expense_category (category_id, category_name) VALUES (DEFAULT, $1)"
+    q_category <- "INSERT INTO expense_category (category_id, category_name)
+                   VALUES (DEFAULT, $1)"
     dbSendQuery(con, q_category, c(input$category_name))
   })
   
   observeEvent(input$set_account_value, {
     
-    q_get_account_id <- "SELECT account_id FROM account WHERE account_name = $1"
+    q_get_account_id <- "SELECT account_id
+                         FROM account
+                         WHERE account_name = $1"
     account_id <- get_id(con, q_get_account_id, input$net_worth_account, "account_id")
     
     # Check if account_value is entered already
-    q_check_account_value <- "SELECT COUNT(*) FROM account_value WHERE account_id = $1"
+    q_check_account_value <- "SELECT COUNT(*)
+                              FROM account_value
+                              WHERE account_id = $1"
     existing_account <- account_exists(con, q_check_account_value, account_id)
     
     if (existing_account) {
-      q_update_value <- "UPDATE account_value SET account_value = $1 WHERE account_id = $2"
+      q_update_value <- "UPDATE account_value SET account_value = $1
+                         WHERE account_id = $2"
       dbSendQuery(con, q_update_value, c(input$account_current_value, account_id))
     } else {
-      q_value <- "INSERT INTO account_value (account_id, account_value) VALUES ($1, $2)"
+      q_value <- "INSERT INTO account_value (account_id, account_value)
+                  VALUES ($1, $2)"
       dbSendQuery(con, q_value, c(account_id, input$account_current_value))
     }
     
@@ -190,8 +206,7 @@ function(input, output, session) {
   })
 
 
-  q_expense_by_categories <-
-    "SELECT expense_category.category_name, SUM(amount)
+  q_expense_by_categories <- "SELECT expense_category.category_name, SUM(amount)
                               FROM expense
                               JOIN expense_category
                               ON expense.category_id = expense_category.category_id
