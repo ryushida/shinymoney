@@ -18,7 +18,7 @@ create_stacked_bar <- function(df) {
     geom_text(aes(label = paste0(format(round(account_value/sum(account_value)*100, 2), nsmall = 2), "%")),
               position = position_stack(vjust = 0.5)) +
     coord_flip() +
-    labs(y = "Proportions")
+    labs(y = "Proportions", fill = "Account Names")
 }
 
 create_heatmap <- function(df) {
