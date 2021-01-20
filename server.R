@@ -50,6 +50,7 @@ function(input, output, session) {
   q_account_type <- "SELECT account_type FROM account_type"
   q_expense_account <- "SELECT account_name FROM account"
   q_expense_category <- "SELECT category_name FROM expense_category"
+  q_account_names <- "SELECT account_name FROM account"
 
   observe({
     updateSelectInput(session, "account_type",
@@ -62,6 +63,9 @@ function(input, output, session) {
     updateSelectInput(session, "expense_category",
       choices = dbFetch(dbSendQuery(con, q_expense_category))
     )
+    
+    updateSelectInput(session, "net_worth_account",
+      choices = dbFetch(dbSendQuery(con, q_account_names)))
   })
 
 
@@ -113,7 +117,25 @@ function(input, output, session) {
     q_category <- "INSERT INTO expense_category (category_id, category_name) VALUES (DEFAULT, $1)"
     dbSendQuery(con, q_category, c(input$category_name))
   })
-
+  
+  observeEvent(input$set_account_value, {
+    
+    q_get_account_id <- "SELECT account_id FROM account WHERE account_name = $1"
+    account_id <- get_id(con, q_get_account_id, input$net_worth_account, "account_id")
+    
+    # Check if account_value is entered already
+    q_check_account_value <- "SELECT COUNT(*) FROM account_value WHERE account_id = $1"
+    existing_account <- account_exists(con, q_check_account_value, account_id)
+    
+    if (existing_account) {
+      q_update_value <- "UPDATE account_value SET account_value = $1 WHERE account_id = $2"
+      dbSendQuery(con, q_update_value, c(input$account_current_value, account_id))
+    } else {
+      q_value <- "INSERT INTO account_value (account_id, account_value) VALUES ($1, $2)"
+      dbSendQuery(con, q_value, c(account_id, input$account_current_value))
+    }
+    
+  })
 
 
   #
@@ -183,5 +205,18 @@ function(input, output, session) {
     barplot(expense_by_categories()$sum,
             names.arg = expense_by_categories()$category_name,
             xlab = "Category", ylab = "Amount")
+  })
+  
+  q_account_values <- "SELECT account.account_name, account_value.account_value
+                        FROM account_value
+                        LEFT JOIN account
+                        ON account_value.account_id = account.account_id"
+  
+  account_values <- reactive({
+    dbFetch(dbSendQuery(con, q_account_values))
+  })
+  
+  output$account_values_graph <- renderPlot({
+    create_stacked_bar(account_values())
   })
 }

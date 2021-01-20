@@ -1,5 +1,5 @@
 
-R Shiny Application for managing and visualizing expenses/spending.
+R Shiny Application for visualizing expenses and net worth.
 
 # Features
 
@@ -10,6 +10,10 @@ R Shiny Application for managing and visualizing expenses/spending.
 - Visualize Spending by Category
 
 - Manage categories, accounts, and account types
+
+- Enter value of each account
+
+- Visualize accounts
 
 
 # Usage

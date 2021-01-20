@@ -6,6 +6,20 @@ get_id <- function(con, query, value, colname) {
   id <- dbFetch(id)[[colname]]
 }
 
+account_exists <- function(con, query, id) {
+  count <- dbFetch(dbSendQuery(con, query, id))
+  exists <- ifelse(count > 0, TRUE, FALSE)
+}
+
+create_stacked_bar <- function(df) {
+  df <- df %>% mutate(Values = "")
+  ggplot(df, aes(Values, account_value/sum(account_value), fill = account_name)) +
+    geom_col() +
+    geom_text(aes(label = paste0(format(round(account_value/sum(account_value)*100, 2), nsmall = 2), "%")),
+              position = position_stack(vjust = 0.5)) +
+    coord_flip() +
+    labs(y = "Proportions")
+}
 
 create_heatmap <- function(df) {
   ggplot(add_day_text(df), aes(week_of_month, day_of_week_text, fill = metric)) +
