@@ -3,17 +3,17 @@ R Shiny Application for visualizing expenses and net worth.
 
 # Features
 
-- Enter expenses
+- Enter expenses (date, amount, account, category, notes)
 
-- Visualize Spending by Date
+- Visualize Spending by Date (Scatter plot and heatmap)
 
-- Visualize Spending by Category
-
-- Manage categories, accounts, and account types
+- Visualize Spending by Category (Scatter plot and heatmap)
 
 - Enter value of each account
 
-- Visualize accounts
+- Visualize the value of each account (Stacked Bar Plot)
+
+- Manage categories, accounts, and account types
 
 
 # Usage
