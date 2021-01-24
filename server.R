@@ -177,7 +177,7 @@ function(input, output, session) {
   })
   
   output$expense_amount <- renderPlot({
-    plot(expense_amounts()$date, expense_amounts()$sum,
+    plot(expense_amounts()$date, expense_amounts()$metric,
          xlab = "Date", ylab = "Amount")
   })
 
