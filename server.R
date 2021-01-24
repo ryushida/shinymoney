@@ -43,7 +43,8 @@ function(input, output, session) {
                       JOIN expense_category
                       ON expense.category_id = expense_category.category_id
                       JOIN account
-                      ON expense.account_id = account.account_id"
+                      ON expense.account_id = account.account_id
+                      ORDER BY date"
   output$expense_table <-
     DT::renderDataTable(dbFetch(dbSendQuery(con, q_expense_table)))
 
