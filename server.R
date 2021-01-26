@@ -69,6 +69,10 @@ function(input, output, session) {
       choices = dbFetch(dbSendQuery(con, q_expense_category))
     )
     
+    updateSelectInput(session, "subscription_category",
+      choices = dbFetch(dbSendQuery(con, q_expense_category))
+    )
+    
     updateSelectInput(session, "net_worth_account",
       choices = dbFetch(dbSendQuery(con, q_account_names)))
   })
@@ -121,6 +125,24 @@ function(input, output, session) {
         input$expense_note
       )
     )
+  })
+  
+  observeEvent(input$add_subscription, {
+    q_category_id <- "SELECT category_id
+                      FROM expense_category
+                      WHERE category_name = $1"
+    category_id <- get_id(con, q_category_id, input$subscription_category, "category_id")
+    
+    
+    q_subscription <- "INSERT INTO subscription (subscription_id,
+                                                 subscription_name,
+                                                 category_id,
+                                                 subscription_price)
+                       VALUES (DEFAULT, $1, $2, $3)"
+    dbSendQuery(con, q_subscription, c(input$subscription_name, category_id,
+                                       input$subscription_price))
+    
+    
   })
 
   observeEvent(input$add_category, {
@@ -234,5 +256,24 @@ function(input, output, session) {
   
   output$account_values_graph <- renderPlot({
     create_stacked_bar(account_values())
+  })
+  
+  q_all_subscriptions <- "SELECT subscription_name as name,
+                                 subscription_price as price
+                          FROM subscription
+                          ORDER BY price"
+  
+  subscription_values <- reactive({
+    dbFetch(dbSendQuery(con, q_all_subscriptions))
+  })
+  
+  output$subscription_table <-
+    DT::renderDataTable(dbFetch(dbSendQuery(con, q_all_subscriptions)))
+  
+  output$subscription_values <- renderPlot({
+    ggplot(subscription_values(), aes(x = reorder(name, price), y = price)) +
+      geom_col() +
+      coord_flip() +
+      labs(x = "", y = "Yearly Price")
   })
 }
