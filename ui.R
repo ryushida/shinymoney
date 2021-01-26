@@ -36,6 +36,27 @@ fluidPage(navbarPage(
   ),
   
   tabPanel(
+    "Subscriptions",
+    sidebarPanel(
+      textInput("subscription_name", "Name", ""),
+      numericInput("subscription_price", "Price per Year", value = 0, min = 0, step = 0.01),
+      selectInput("subscription_category", "Category", choices = c("")),
+      actionButton("add_subscription", "Add subscription")
+    ),
+    
+    mainPanel(tabsetPanel(
+      tabPanel(
+        "Graph",
+        plotOutput("subscription_values", click = "plot_click")
+      ),
+      tabPanel(
+        "Table",
+        DT::dataTableOutput("subscription_table")
+      )
+    ))
+  ),
+  
+  tabPanel(
     "Net Worth",
     # Menu to update the current value of each Account
     sidebarPanel(

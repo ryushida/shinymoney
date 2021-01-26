@@ -26,6 +26,13 @@ CREATE TABLE IF NOT EXISTS expense (
 	note varchar(140)
 );
 
+CREATE TABLE IF NOT EXISTS subscription (
+  subscription_id SERIAL PRIMARY KEY,
+  subscription_name varchar(50) UNIQUE,
+  category_id integer REFERENCES expense_category (category_id),
+  subscription_price numeric
+);
+
 CREATE TABLE IF NOT EXISTS account_value (
   account_id integer REFERENCES account(account_id) UNIQUE,
   account_value numeric
