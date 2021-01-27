@@ -276,4 +276,19 @@ function(input, output, session) {
       coord_flip() +
       labs(x = "", y = "Yearly Price")
   })
+  
+  q_week <- "SELECT expense.date,
+                    expense.amount,
+                    expense_category.category_name
+             FROM expense
+             JOIN expense_category
+             ON expense.category_id = expense_category.category_id"
+  
+  date_expenses <- reactive({
+    dbFetch(dbSendQuery(con, q_week))
+  })
+  
+  output$expense_week <- renderPlot({
+    create_category_weeks(date_expenses())
+  })
 }

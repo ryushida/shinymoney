@@ -23,6 +23,15 @@ create_stacked_bar <- function(df) {
     labs(y = "Proportions", fill = "Account Names")
 }
 
+create_category_weeks <- function(df) {
+  df$date <- as.Date(df$date, format = "%Y-%m-%d")
+  
+  ggplot(df, aes(x = date, y = amount, color = category_name)) +
+    geom_line() +
+    geom_point() +
+    theme_bw()
+}
+
 create_heatmap <- function(df) {
   ggplot(add_day_text(df), aes(week_of_month, day_of_week_text, fill = metric)) +
     geom_tile() +
