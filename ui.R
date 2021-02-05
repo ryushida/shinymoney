@@ -70,6 +70,7 @@ fluidPage(navbarPage(
     mainPanel(tabsetPanel(
       tabPanel(
         "Account Values",
+        textOutput("net_worth_value"),
         plotOutput("account_values_graph", click = "plot_click")
       )
     ))

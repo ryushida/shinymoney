@@ -291,4 +291,12 @@ function(input, output, session) {
   output$expense_week <- renderPlot({
     create_category_weeks(date_expenses())
   })
+  
+  q_net_worth_value <- "SELECT to_char(round(SUM(account_value), 2),
+                                       'fm999,999,999,999.99')
+                        FROM account_value"
+  
+  output$net_worth_value <- renderText({
+    unlist(dbFetch(dbSendQuery(con, q_net_worth_value)))
+  })
 }
