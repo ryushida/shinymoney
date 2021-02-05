@@ -276,4 +276,12 @@ function(input, output, session) {
       coord_flip() +
       labs(x = "", y = "Yearly Price")
   })
+  
+  q_net_worth_value <- "SELECT to_char(round(SUM(account_value), 2),
+                                       'fm999,999,999,999.99')
+                        FROM account_value"
+  
+  output$net_worth_value <- renderText({
+    unlist(dbFetch(dbSendQuery(con, q_net_worth_value)))
+  })
 }
