@@ -15,6 +15,8 @@ R Shiny Application for visualizing expenses and net worth.
 
 - Manage categories, accounts, and account types
 
+- Import CSV of Portfolio and Visualize (Bar and Treemap)
+
 
 # Usage
 

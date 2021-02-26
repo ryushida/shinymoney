@@ -299,4 +299,32 @@ function(input, output, session) {
   output$net_worth_value <- renderText({
     unlist(dbFetch(dbSendQuery(con, q_net_worth_value)))
   })
+  
+  observeEvent(input$import_csv, {
+    if (!is.null(input$csv_input)) {
+      file <- input$csv_input
+      
+      df <- read.csv(file$datapath, skip = 3)
+      df <- df[df[, "Symbol"] != "Account Total", ]
+      df$Market.Value <- str_sub(df$Market.Value, 2)
+      df$Market.Value <- as.numeric(df$Market.Value)
+      
+      output$portfolio_graph <- renderPlot({
+        portfolio_bar(df)
+      })
+      
+      output$portfolio_graph2 <- renderPlot({
+        portfolio_treemap(df)
+      })
+      
+      output$portfolio_table <- DT::renderDataTable(df, options = list(
+        autoWidth = TRUE,
+        scrollX = TRUE,
+        fixedHeader = TRUE,
+        fixedColumns = list()
+      ))
+    }
+  })
+  
+
 }
