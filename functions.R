@@ -1,4 +1,5 @@
 library(tidyverse)
+library(treemapify)
 
 get_id <- function(con, query, value, colname) {
   id <- dbSendQuery(con, query)
@@ -53,3 +54,26 @@ add_day_text <- function(df) {
     )
   )
 }
+
+
+portfolio_bar <- function(df) {
+  ggplot(df, aes(x = reorder(Description, Market.Value), y = Market.Value)) +
+    geom_col() +
+    coord_flip() +
+    scale_x_discrete(label = function(x) stringr::str_trunc(x, 20)) +
+    labs(title = "Market Values")
+}
+
+portfolio_treemap <- function(df) {
+  df$Text <- df$Symbol
+  df$Text <-
+    paste(df$Text, " ", format(round(
+      df$Market.Value / sum(df$Market.Value) * 100, 1
+    ), nsmall = 1), "%", sep = "")
+  
+  ggplot(df, aes(area = Market.Value)) +
+    geom_treemap() +
+    geom_treemap_text(aes(label = paste(Text)), color = "white")
+}
+
+

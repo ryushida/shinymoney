@@ -65,13 +65,26 @@ fluidPage(navbarPage(
       numericInput("account_current_value", "Current Account Value",
                    value = 0, min = 0, step = 0.01),
       actionButton("set_account_value", "Update Account Value"),
+      helpText("Upload CSV below"),
+      fileInput("csv_input", "CSV", multiple = FALSE,
+                accept = c(
+                  "text/csv",
+                  "text/comma-separated-values,text/plain",
+                  ".csv")),
+      actionButton("import_csv", "Import CSV")
     ),
     
     mainPanel(tabsetPanel(
       tabPanel(
         "Account Values",
         textOutput("net_worth_value"),
-        plotOutput("account_values_graph", click = "plot_click")
+        plotOutput("account_values_graph", click = "plot_click"),
+        DT::dataTableOutput("portfolio_table"),
+        br(),
+        plotOutput("portfolio_graph", height = "600px", click = "plot_click"),
+        br(),
+        plotOutput("portfolio_graph2", click = "plot_click"),
+        br()
       )
     ))
     
