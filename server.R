@@ -304,7 +304,7 @@ function(input, output, session) {
     if (!is.null(input$csv_input)) {
       file <- input$csv_input
       
-      df <- read.csv(file$datapath, skip = 3)
+      df <- read.csv(file$datapath, skip = 2)
       df <- df[df[, "Symbol"] != "Account Total", ]
       df$Market.Value <- str_sub(df$Market.Value, 2)
       df$Market.Value <- as.numeric(df$Market.Value)
